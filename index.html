@@ -800,12 +800,6 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
         <div class="af-hint" style="margin-top:6px"><span style="color:rgba(58,40,0,.45)">Forgot password?</span> <button class="af-lnk" style="color:#8B6F2E" onclick="openChat()">Contact Support</button></div>
       </div>
     </div>
-    <!-- Guest Chat Button -->
-    <div style="margin-top:20px;text-align:center;">
-      <button onclick="openChat()" style="background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.25));border:1px solid rgba(201,168,76,.4);border-radius:22px;padding:11px 28px;color:var(--gold,#C9A84C);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
-        💬 Chat with Support
-      </button>
-    </div>
   </div>
 </div>
 
@@ -1202,15 +1196,15 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
 <div class="cr-modal" id="changePhoneModal">
   <div class="cr-box">
     <div class="cr-title">📱 Change Phone Number</div>
-    <div class="cr-sub">Enter your current password to confirm</div>
-    <label class="cr-lbl">Current Password</label>
-    <input class="cr-inp" id="cpOld" type="password" placeholder="6 digits" maxlength="6">
-    <label class="cr-lbl">New Phone Number</label>
-    <input class="cr-inp" id="cpNew" type="tel" placeholder="+959xxxxxxx">
+    <div class="cr-sub">Request sent to Admin for review</div>
+    <label class="cr-lbl">Current Phone</label>
+    <input class="cr-inp" id="cpOld" type="tel" placeholder="+95 9xxxxxxx">
+    <label class="cr-lbl">New Phone</label>
+    <input class="cr-inp" id="cpNew" type="tel" placeholder="+95 9xxxxxxx">
     <div style="font-size:12px;color:var(--dn);min-height:16px" id="cpErr"></div>
     <div class="cr-btns">
       <button class="cr-cancel" onclick="document.getElementById('changePhoneModal').style.display='none'">Cancel</button>
-      <button class="cr-confirm" onclick="submitChangeReq('phone')">Confirm</button>
+      <button class="cr-confirm" onclick="submitChangeReq('phone')">Submit</button>
     </div>
   </div>
 </div>
@@ -1219,7 +1213,7 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
 <div class="cr-modal" id="changePassModal">
   <div class="cr-box">
     <div class="cr-title">🔒 Change Password</div>
-    <div class="cr-sub">Enter current password to confirm</div>
+    <div class="cr-sub">Request sent to Admin for review</div>
     <label class="cr-lbl">Current Password</label>
     <input class="cr-inp" id="ppOld" type="password" placeholder="6 digits" maxlength="6">
     <label class="cr-lbl">New Password</label>
@@ -1227,7 +1221,7 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
     <div style="font-size:12px;color:var(--dn);min-height:16px" id="ppErr"></div>
     <div class="cr-btns">
       <button class="cr-cancel" onclick="document.getElementById('changePassModal').style.display='none'">Cancel</button>
-      <button class="cr-confirm" onclick="submitChangeReq('password')">Confirm</button>
+      <button class="cr-confirm" onclick="submitChangeReq('password')">Submit</button>
     </div>
   </div>
 </div>
@@ -1248,15 +1242,6 @@ const firebaseConfig = {
 let app, auth, db;
 try { app=firebase.initializeApp(firebaseConfig); auth=firebase.auth(); db=firebase.firestore(); }
 catch(e){ console.warn('Firebase:',e.message); }
-
-// ================================================================
-// GUEST CHAT ID
-// ================================================================
-let guestChatId = localStorage.getItem('guestChatId');
-if(!guestChatId){
-  guestChatId = 'guest_' + Math.random().toString(36).slice(2,10) + '_' + Date.now();
-  localStorage.setItem('guestChatId', guestChatId);
-}
 
 // ================================================================
 // STATE
@@ -1370,31 +1355,49 @@ function checkMmPhone(input, flagId){
 // ================================================================
 if(auth){
   auth.onAuthStateChanged(async user=>{
-    _authResolved = true;
     if(_registering){
       const splash=document.getElementById('appSplash');
       if(splash){ splash.style.opacity='0'; setTimeout(()=>splash.remove(),400); }
       return;
     }
     if(user){
-      const removeSplash=()=>{ const s=document.getElementById('appSplash');if(s){s.style.opacity='0';setTimeout(()=>s.remove(),350);} };
       try{
         let snap=await db.collection('users').doc(user.uid).get();
         if(!snap.exists){
+          // New user from Google — create pending doc
           await createUserDoc(user.uid, user.displayName||'', '', user.email||'', user.email||'', 'google');
           snap=await db.collection('users').doc(user.uid).get();
         }
-        const data=snap.data()||{};
-        currentUser={uid:user.uid,balance:{usd:0,wg:0,mmk:0},trade_history:[],...data};
-        showApp(currentUser); removeSplash();
-        startWalletListener(user.uid);
-        startChatListener(user.uid);
+        const data=snap.data();
+        currentUser={uid:user.uid,...data};
+
+        const removeSplash=()=>{ const s=document.getElementById('appSplash');if(s){s.style.opacity='0';setTimeout(()=>s.remove(),350);} };
+        if(data.status==='active'){
+          if(data.otpCode && !data.otpVerified){
+            showOTP(); removeSplash();
+          } else {
+            showApp(data); removeSplash();
+            startWalletListener(user.uid);
+            startChatListener(user.uid);
+          }
+        } else if(data.status==='pending'){
+          showPending(); removeSplash();
+          startPendingListener(user.uid);
+        } else if(data.status==='rejected'){
+          removeSplash();
+          showToast('❌ Account rejected. Contact admin.');
+          await auth.signOut();
+          goToLanding();
+        } else {
+          showPending(); removeSplash();
+          startPendingListener(user.uid);
+        }
       }catch(e){
-        // Firestore read failed (permissions/network) — still show main app
-        console.warn('Firestore read failed, using minimal user data:',e.message);
-        currentUser={uid:user.uid,realName:user.displayName||'Trader',email:user.email||'',balance:{usd:0,wg:0,mmk:0},trade_history:[],kyc_verified:false};
-        showApp(currentUser); removeSplash();
-        startChatListener(user.uid);
+        console.warn('Auth state:',e.message);
+        if(auth.currentUser){
+          currentUser={uid:user.uid,balance:{usd:0,wg:0,mmk:0},trade_history:[]};
+          showApp(currentUser);
+        } else { goToLanding(); }
       }
     } else {
       currentUser=null;
@@ -1403,6 +1406,7 @@ if(auth){
       if(pendingUnsub){pendingUnsub();pendingUnsub=null;}
       const splash=document.getElementById('appSplash');
       if(splash){ splash.style.opacity='0'; setTimeout(()=>splash.remove(),400); }
+      goToLanding();
     }
   });
 }
@@ -1451,7 +1455,7 @@ async function createUserDoc(uid, realName, username, contact, email, method='ph
   const seqLabel=String(seqId).padStart(3,'0');
   await db.collection('users').doc(uid).set({
     uid,seqId,seqLabel,realName,username,contact,email,method,
-    status:'active',level:'standard',
+    status:'pending',level:'standard',
     createdAt:firebase.firestore.FieldValue.serverTimestamp(),
     balance:{usd:0,wg:0,mmk:0},trade_history:[],
     kyc_verified:false,kycSubmitted:false,otpVerified:false,
@@ -1500,11 +1504,10 @@ async function doRegister(){
     const cred=await auth.createUserWithEmailAndPassword(email,pass);
     const uid=cred.user.uid;
     await createUserDoc(uid,name,uname,contact,email,regMethod);
-    currentUser={uid,realName:name,username:uname,contact,email,status:'active',level:'standard',kyc_verified:false,kycSubmitted:false,balance:{usd:0,wg:0,mmk:0},trade_history:[]};
+    currentUser={uid,realName:name,username:uname,contact,email,status:'pending'};
     _registering=false;
-    showApp(currentUser);
-    startWalletListener(uid);
-    startChatListener(uid);
+    showPending();
+    startPendingListener(uid);
   }catch(e){
     _registering=false;
     const m={'auth/email-already-in-use':'❌ This phone/email is already registered. Please Sign In.','auth/weak-password':'⚠️ Password too weak.'};
@@ -1772,7 +1775,6 @@ function openDepositModal(){
 }
 async function submitDeposit(){
   if(!currentUser)return;
-  if(!currentUser.kyc_verified){showToast('⚠️ Complete KYC first.');document.getElementById('kycModal').style.display='flex';return;}
   const amt=parseFloat(document.getElementById('depAmt')?.value||0);
   const note=document.getElementById('depNote')?.value?.trim()||'';
   const err=document.getElementById('depErr');
@@ -1853,42 +1855,14 @@ async function submitChangeReq(type){
   else{oldVal=document.getElementById('ppOld')?.value||'';newVal=document.getElementById('ppNew')?.value||'';errId='ppErr';}
   const err=document.getElementById(errId);
   if(!oldVal||!newVal){if(err)err.textContent='⚠️ Both fields required.';return;}
-  if(type==='password'&&newVal.length!==6){if(err)err.textContent='⚠️ New password must be 6 characters.';return;}
-  if(err)err.textContent='Processing...';
+  if(type==='password'&&newVal.length!==6){if(err)err.textContent='⚠️ Password must be 6 characters.';return;}
+  if(err)err.textContent='Submitting...';
   try{
-    // Re-authenticate first
-    const currentEmail=auth.currentUser.email;
-    const reAuthPass=type==='phone'?oldVal:oldVal; // old phone or old password
-    // For phone change: oldVal=current password, newVal=new phone
-    // For password change: oldVal=current password, newVal=new password
-    const credential=firebase.auth.EmailAuthProvider.credential(currentEmail, type==='phone'?oldVal:oldVal);
-    await auth.currentUser.reauthenticateWithCredential(credential);
-
-    if(type==='password'){
-      // Change Firebase Auth password
-      await auth.currentUser.updatePassword(newVal);
-      if(err)err.textContent='';
-      const modal=document.getElementById('changePassModal');if(modal)modal.style.display='none';
-      showToast('✅ Password changed successfully!');
-
-    } else if(type==='phone'){
-      // Change phone: update Firebase Auth email + Firestore contact
-      if(!newVal.startsWith('+959')&&!newVal.startsWith('09')&&!newVal.startsWith('959')){
-        if(err)err.textContent='❌ Phone must start with +959 (Myanmar only).';return;
-      }
-      const digits=newVal.replace(/[^0-9]/g,'');
-      const newEmail=digits+'@comex.gold.trade';
-      await auth.currentUser.updateEmail(newEmail);
-      await db.collection('users').doc(currentUser.uid).update({contact:newVal,email:newEmail});
-      currentUser.contact=newVal;currentUser.email=newEmail;
-      if(err)err.textContent='';
-      const modal=document.getElementById('changePhoneModal');if(modal)modal.style.display='none';
-      showToast('✅ Phone number changed successfully!');
-    }
-  }catch(e){
-    const m={'auth/wrong-password':'❌ Current password is incorrect.','auth/weak-password':'⚠️ New password too weak.','auth/email-already-in-use':'❌ This phone is already registered.'};
-    if(err)err.textContent=m[e.code]||'❌ '+e.message;
-  }
+    await db.collection('changeRequests').add({userId:currentUser.uid,userName:currentUser.realName||'',type,oldValue:type==='password'?'[hidden]':oldVal,newValue:newVal,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    if(err)err.textContent='';
+    const modal=document.getElementById(type==='phone'?'changePhoneModal':'changePassModal');if(modal)modal.style.display='none';
+    showToast('✅ Request submitted! Admin will process soon.');
+  }catch(e){if(err)err.textContent='❌ '+e.message;}
 }
 
 // ================================================================
@@ -1911,42 +1885,28 @@ function openChat(){
   const o=document.getElementById('chatOverlay');
   if(!o)return;
   o.style.display='flex';
-  const chatId = currentUser ? currentUser.uid : guestChatId;
-  if(!chatUnsub) startChatListener(chatId);
+  if(currentUser && !chatUnsub) startChatListener(currentUser.uid);
   setTimeout(()=>{const m=document.getElementById('chatMsgs');if(m)m.scrollTop=m.scrollHeight;},100);
-  // Welcome message for guest
+  // Show guest message if not logged in
   if(!currentUser){
     const msgs=document.getElementById('chatMsgs');
     if(msgs && msgs.children.length===0){
       const div=document.createElement('div');
       div.className='msg-row';
-      div.innerHTML='<div class="msg-bub"><p>👋 Hello! How can we help you today?</p><div class="msg-t">Support</div></div>';
+      div.innerHTML='<div class="msg-bub"><p>Hello! How can we help you? Please sign in to start chatting.</p><div class="msg-t">Support</div></div>';
       msgs.appendChild(div);
     }
   }
 }
-function closeChat(){
-  const o=document.getElementById('chatOverlay');if(o)o.style.display='none';
-  if(!currentUser && chatUnsub){chatUnsub();chatUnsub=null;}
-}
+function closeChat(){const o=document.getElementById('chatOverlay');if(o)o.style.display='none';}
 function closeChatOut(e){if(e.target===document.getElementById('chatOverlay'))closeChat();}
 async function sendMsg(){
+  if(!currentUser){showToast('Please sign in to chat.');return;}
   const inp=document.getElementById('chatInp');const txt=inp?.textContent?.trim()||'';
   if(!txt||txt==='Message...')return;if(inp)inp.textContent='';
-  const chatId = currentUser ? currentUser.uid : guestChatId;
-  const userName = currentUser ? (currentUser.realName||'User') : 'Guest';
-  const isGuest = !currentUser;
   try{
-    await db.collection('chats').doc(chatId).collection('messages').add({
-      text:txt, sender:'user', userId:chatId, userName, isGuest,
-      timestamp:firebase.firestore.FieldValue.serverTimestamp()
-    });
-    await db.collection('chats').doc(chatId).set({
-      userId:chatId, userName, isGuest,
-      seqLabel: currentUser ? (currentUser.seqLabel||'') : 'GUEST',
-      lastMsg:txt, lastMsgAt:firebase.firestore.FieldValue.serverTimestamp(),
-      unreadAdmin:firebase.firestore.FieldValue.increment(1)
-    },{merge:true});
+    await db.collection('chats').doc(currentUser.uid).collection('messages').add({text:txt,sender:'user',userId:currentUser.uid,userName:currentUser.realName||'User',timestamp:firebase.firestore.FieldValue.serverTimestamp()});
+    await db.collection('chats').doc(currentUser.uid).set({userId:currentUser.uid,userName:currentUser.realName||'',seqLabel:currentUser.seqLabel||'',lastMsg:txt,lastMsgAt:firebase.firestore.FieldValue.serverTimestamp(),unreadAdmin:firebase.firestore.FieldValue.increment(1)},{merge:true});
   }catch(e){console.error(e);}
 }
 
