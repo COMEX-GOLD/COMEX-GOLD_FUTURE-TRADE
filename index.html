@@ -1366,18 +1366,6 @@ function checkMmPhone(input, flagId){
 }
 
 // ================================================================
-// BLACK SCREEN FALLBACK — 5 sec timeout
-// ================================================================
-let _authResolved = false;
-setTimeout(()=>{
-  if(!_authResolved){
-    const splash=document.getElementById('appSplash');
-    if(splash){ splash.style.opacity='0'; setTimeout(()=>{ if(splash.parentNode)splash.remove(); },400); }
-    goToLanding();
-  }
-}, 5000);
-
-// ================================================================
 // AUTH STATE LISTENER
 // ================================================================
 if(auth){
@@ -1415,7 +1403,6 @@ if(auth){
       if(pendingUnsub){pendingUnsub();pendingUnsub=null;}
       const splash=document.getElementById('appSplash');
       if(splash){ splash.style.opacity='0'; setTimeout(()=>splash.remove(),400); }
-      goToLanding();
     }
   });
 }
