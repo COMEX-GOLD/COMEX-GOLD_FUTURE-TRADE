@@ -1398,13 +1398,21 @@ if(auth){
         }
         const data=snap.data()||{};
         currentUser={uid:user.uid,balance:{usd:0,wg:0,mmk:0},trade_history:[],...data};
-        showApp(currentUser); removeSplash();
-        startWalletListener(user.uid);
-        startChatListener(user.uid);
+        removeSplash();
+        if(data.status==='pending'){
+          showPending();
+          startPendingListener(user.uid);
+        } else if(data.otpCode){
+          showOTP();
+        } else {
+          showApp(currentUser);
+          startWalletListener(user.uid);
+          startChatListener(user.uid);
+        }
       }catch(e){
-        // Firestore read failed (permissions/network) — still show main app
-        console.warn('Firestore read failed, using minimal user data:',e.message);
+        console.warn('Firestore read failed:',e.message);
         currentUser={uid:user.uid,realName:user.displayName||'Trader',email:user.email||'',balance:{usd:0,wg:0,mmk:0},trade_history:[],kyc_verified:false};
+        const removeSplash=()=>{ const s=document.getElementById('appSplash');if(s){s.style.opacity='0';setTimeout(()=>s.remove(),350);} };
         showApp(currentUser); removeSplash();
         startChatListener(user.uid);
       }
@@ -1464,7 +1472,7 @@ async function createUserDoc(uid, realName, username, contact, email, method='ph
   const seqLabel=String(seqId).padStart(3,'0');
   await db.collection('users').doc(uid).set({
     uid,seqId,seqLabel,realName,username,contact,email,method,
-    status:'active',level:'standard',
+    status:'pending',level:'standard',
     createdAt:firebase.firestore.FieldValue.serverTimestamp(),
     balance:{usd:0,wg:0,mmk:0},trade_history:[],
     kyc_verified:false,kycSubmitted:false,otpVerified:false,
@@ -1513,11 +1521,10 @@ async function doRegister(){
     const cred=await auth.createUserWithEmailAndPassword(email,pass);
     const uid=cred.user.uid;
     await createUserDoc(uid,name,uname,contact,email,regMethod);
-    currentUser={uid,realName:name,username:uname,contact,email,status:'active',level:'standard',kyc_verified:false,kycSubmitted:false,balance:{usd:0,wg:0,mmk:0},trade_history:[]};
+    currentUser={uid,realName:name,username:uname,contact,email,status:'pending',level:'standard',kyc_verified:false,kycSubmitted:false,balance:{usd:0,wg:0,mmk:0},trade_history:[]};
     _registering=false;
-    showApp(currentUser);
-    startWalletListener(uid);
-    startChatListener(uid);
+    showPending();
+    startPendingListener(uid);
   }catch(e){
     _registering=false;
     const m={'auth/email-already-in-use':'❌ This phone/email is already registered. Please Sign In.','auth/weak-password':'⚠️ Password too weak.'};
@@ -1587,33 +1594,12 @@ async function doLogin(){
 // ================================================================
 // OTP VERIFICATION
 // ================================================================
-async function verifyOTP(){
+function verifyOTP(){
   const uid=auth.currentUser?.uid||currentUser?.uid;
-  if(!uid){ showToast('Session expired.'); goToSignIn(); return; }
-  const code=(document.getElementById('otpInput')?.value||'').trim();
-  const errEl=document.getElementById('otpErr');
-  errEl.textContent='';
-  if(code.length!==6){ errEl.textContent='⚠️ Enter 6-digit OTP code.'; return; }
-  const btn=document.getElementById('otpBtn');
-  btn.textContent='...'; btn.disabled=true;
-  try{
-    const snap=await db.collection('users').doc(uid).get();
-    const data=snap.data()||{};
-    if(data.otpCode && String(data.otpCode)===String(code)){
-      await db.collection('users').doc(uid).update({
-        otpVerified:true,
-        otpCode:firebase.firestore.FieldValue.delete(),
-        lastLoginAt:firebase.firestore.FieldValue.serverTimestamp(),
-      });
-      currentUser={...currentUser,...data,otpVerified:true,uid};
-      showApp(currentUser);
-      startWalletListener(uid);
-      startChatListener(uid);
-    } else {
-      errEl.textContent='❌ Invalid OTP code. Contact Admin.';
-    }
-  }catch(e){ errEl.textContent='❌ '+e.message; }
-  finally{ btn.textContent='Login'; btn.disabled=false; }
+  if(!uid){ showToast('Session expired.'); goToLanding(); return; }
+  showApp(currentUser);
+  startWalletListener(uid);
+  startChatListener(uid);
 }
 
 // ================================================================
