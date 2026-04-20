@@ -1,0 +1,42 @@
+{
+  "name": "COMEX GOLD TRADING",
+  "short_name": "COMEX",
+  "description": "Myanmar's Premier Precious Metals Exchange - Live XAU/USD Trading Platform",
+  "start_url": "/COMEX-GOLD_FUTURE-TRADE/",
+  "scope": "/COMEX-GOLD_FUTURE-TRADE/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0F0E0B",
+  "theme_color": "#C9A84C",
+  "lang": "my",
+  "dir": "ltr",
+  "categories": ["finance", "business"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%230F0E0B'/%3E%3Ctext x='96' y='120' text-anchor='middle' font-size='80' font-family='serif' fill='%23C9A84C'%3E%F0%9F%AA%99%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%230F0E0B'/%3E%3Ctext x='256' y='320' text-anchor='middle' font-size='220' font-family='serif' fill='%23C9A84C'%3E%F0%9F%AA%99%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Live Prices",
+      "url": "/COMEX-GOLD_FUTURE-TRADE/#prices",
+      "description": "View live XAU/USD prices"
+    },
+    {
+      "name": "My Account",
+      "url": "/COMEX-GOLD_FUTURE-TRADE/#account",
+      "description": "Access your trading account"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
