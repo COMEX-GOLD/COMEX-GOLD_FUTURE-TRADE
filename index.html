@@ -1389,27 +1389,24 @@ if(auth){
       return;
     }
     if(user){
+      const removeSplash=()=>{ const s=document.getElementById('appSplash');if(s){s.style.opacity='0';setTimeout(()=>s.remove(),350);} };
       try{
         let snap=await db.collection('users').doc(user.uid).get();
         if(!snap.exists){
-          // New user from Google — create pending doc
           await createUserDoc(user.uid, user.displayName||'', '', user.email||'', user.email||'', 'google');
           snap=await db.collection('users').doc(user.uid).get();
         }
-        const data=snap.data();
-        currentUser={uid:user.uid,...data};
-
-        const removeSplash=()=>{ const s=document.getElementById('appSplash');if(s){s.style.opacity='0';setTimeout(()=>s.remove(),350);} };
-        // Always go to main app — KYC is checked per-feature, not at login
-        showApp(data); removeSplash();
+        const data=snap.data()||{};
+        currentUser={uid:user.uid,balance:{usd:0,wg:0,mmk:0},trade_history:[],...data};
+        showApp(currentUser); removeSplash();
         startWalletListener(user.uid);
         startChatListener(user.uid);
       }catch(e){
-        console.warn('Auth state:',e.message);
-        if(auth.currentUser){
-          currentUser={uid:user.uid,balance:{usd:0,wg:0,mmk:0},trade_history:[]};
-          showApp(currentUser);
-        } else { goToLanding(); }
+        // Firestore read failed (permissions/network) — still show main app
+        console.warn('Firestore read failed, using minimal user data:',e.message);
+        currentUser={uid:user.uid,realName:user.displayName||'Trader',email:user.email||'',balance:{usd:0,wg:0,mmk:0},trade_history:[],kyc_verified:false};
+        showApp(currentUser); removeSplash();
+        startChatListener(user.uid);
       }
     } else {
       currentUser=null;
