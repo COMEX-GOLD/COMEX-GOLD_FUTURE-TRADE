@@ -1373,14 +1373,15 @@ if(auth){
 
         const removeSplash=()=>{ const s=document.getElementById('appSplash');if(s){s.style.opacity='0';setTimeout(()=>s.remove(),350);} };
         if(data.status==='active'){
-          if(data.otpCode && !data.otpVerified){
-            showOTP(); removeSplash();
-          } else {
-            showApp(data); removeSplash();
-            startWalletListener(user.uid);
-            startChatListener(user.uid);
-          }
+          // OTP verified already → go straight to app
+          showApp(data); removeSplash();
+          startWalletListener(user.uid);
+          startChatListener(user.uid);
+        } else if(data.status==='approved'){
+          // Admin approved → show OTP entry screen
+          showOTP(); removeSplash();
         } else if(data.status==='pending'){
+          // Waiting for admin review
           showPending(); removeSplash();
           startPendingListener(user.uid);
         } else if(data.status==='rejected'){
@@ -1419,20 +1420,22 @@ function startPendingListener(uid){
   pendingUnsub=db.collection('users').doc(uid).onSnapshot(snap=>{
     const d=snap.data(); if(!d) return;
     currentUser={...currentUser,...d};
-    if(d.status==='active'){
+    if(d.status==='approved'){
+      // Admin just approved → stop watching, show OTP screen
       if(pendingUnsub){pendingUnsub();pendingUnsub=null;}
-      if(d.otpCode && !d.otpVerified){
-        showOTP();
-      } else {
-        showApp(d);
-        startWalletListener(uid);
-        startChatListener(uid);
-      }
+      showOTP();
+    } else if(d.status==='active'){
+      // Edge case: already active
+      if(pendingUnsub){pendingUnsub();pendingUnsub=null;}
+      showApp(d);
+      startWalletListener(uid);
+      startChatListener(uid);
     } else if(d.status==='rejected'){
       if(pendingUnsub){pendingUnsub();pendingUnsub=null;}
       showToast('❌ Account rejected by Admin.');
       auth.signOut();
     }
+    // status==='pending' → do nothing, keep watching
   },e=>console.warn('Pending listener:',e));
 }
 
@@ -1589,13 +1592,17 @@ async function verifyOTP(){
   try{
     const snap=await db.collection('users').doc(uid).get();
     const data=snap.data()||{};
-    if(data.otpCode && String(data.otpCode)===String(code)){
+    // Support both field names for backward compatibility
+    const storedOtp=data.otp||data.otpCode;
+    if(storedOtp && String(storedOtp)===String(code)){
       await db.collection('users').doc(uid).update({
-        otpVerified:true,
+        status:'active',
+        otp:firebase.firestore.FieldValue.delete(),
         otpCode:firebase.firestore.FieldValue.delete(),
+        otpVerifiedAt:firebase.firestore.FieldValue.serverTimestamp(),
         lastLoginAt:firebase.firestore.FieldValue.serverTimestamp(),
       });
-      currentUser={...currentUser,...data,otpVerified:true,uid};
+      currentUser={...currentUser,...data,status:'active',uid};
       showApp(currentUser);
       startWalletListener(uid);
       startChatListener(uid);
