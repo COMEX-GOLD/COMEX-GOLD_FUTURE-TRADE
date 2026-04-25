@@ -13,7 +13,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 <script src="https://s3.tradingview.com/tv.js" async></script>
 <style>
 /* ============================================================
@@ -443,6 +442,14 @@ footer{padding:40px 5vw;border-top:1px solid var(--border);display:flex;justify-
 .pm-sec{margin:14px 16px 0;}
 .pm-sec-title{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--subtext);margin-bottom:8px;}
 .pm-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--card);border-radius:13px;margin-bottom:7px;border:1px solid var(--b);cursor:pointer;transition:background .3s;}
+.gs-card{min-width:160px;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:12px 14px;flex-shrink:0}
+.gs-name{font-size:13px;font-weight:700;color:var(--gold2);margin-bottom:3px}
+.gs-loc{font-size:11px;color:var(--subtext);margin-bottom:5px}
+.gs-price{font-size:11px;color:var(--text)}
+.comm-post{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px}
+.comm-user{font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:4px}
+.comm-text{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:6px}
+.comm-time{font-size:10px;color:var(--subtext)}
 .pm-l{display:flex;align-items:center;gap:11px;}
 .pm-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
 .pm-ico img{width:24px;height:24px;object-fit:contain;}
@@ -904,66 +911,27 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
         <div class="tv-loading" id="tv-home-loading"><div class="spinner"></div><p>Loading Chart...</p></div>
         <div id="tv_home"></div>
       </div>
-      <div class="sec-hdr" style="margin-top:18px">🏆 နာမည်ကြီး ရွေဆိုင် ၅ ဆိုင်</div>
-      <div style="padding:0 16px 16px">
-        <div style="display:flex;flex-direction:column;gap:8px">
-
-          <div style="background:var(--card);border-radius:14px;border:1px solid var(--b);padding:12px 14px;display:flex;align-items:center;gap:12px">
-            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#d4af37,#f0c040);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🥇</div>
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:700;color:var(--text)">ရွှေစင် ရွေဆိုင်</div>
-              <div style="font-size:11px;color:var(--subtext);margin-top:2px">Shwe Sin Gold Shop · ရန်ကုန်မြို့</div>
-              <div style="font-size:10px;color:var(--gold2);margin-top:3px;font-weight:600">Founded 1985 · သမိုင်းဝင် ရွေဆိုင်ကြီး</div>
-            </div>
-            <div style="text-align:right"><div style="font-size:10px;color:var(--subtext)">MCM Gold</div><div style="font-size:13px;font-weight:700;color:var(--up)">↑ 5,620K</div></div>
-          </div>
-
-          <div style="background:var(--card);border-radius:14px;border:1px solid var(--b);padding:12px 14px;display:flex;align-items:center;gap:12px">
-            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#b8860b,#daa520);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💎</div>
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:700;color:var(--text)">ရတနာ ရွေဆိုင်</div>
-              <div style="font-size:11px;color:var(--subtext);margin-top:2px">Yadanar Gold Shop · မန္တလေးမြို့</div>
-              <div style="font-size:10px;color:var(--gold2);margin-top:3px;font-weight:600">Est. 1972 · မြောက်ဦး ရွေဆိုင်</div>
-            </div>
-            <div style="text-align:right"><div style="font-size:10px;color:var(--subtext)">MCM Gold</div><div style="font-size:13px;font-weight:700;color:var(--up)">↑ 5,618K</div></div>
-          </div>
-
-          <div style="background:var(--card);border-radius:14px;border:1px solid var(--b);padding:12px 14px;display:flex;align-items:center;gap:12px">
-            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#cd853f,#f4a460);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">⚜️</div>
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:700;color:var(--text)">ဆစ်တီ ရွေဆိုင်</div>
-              <div style="font-size:11px;color:var(--subtext);margin-top:2px">City Gold Shop · ရန်ကုန်မြို့</div>
-              <div style="font-size:10px;color:var(--gold2);margin-top:3px;font-weight:600">Est. 1990 · ကျော်ကြားသော ဆိုင်ကြီး</div>
-            </div>
-            <div style="text-align:right"><div style="font-size:10px;color:var(--subtext)">MCM Gold</div><div style="font-size:13px;font-weight:700;color:var(--dn)">↓ 5,615K</div></div>
-          </div>
-
-          <div style="background:var(--card);border-radius:14px;border:1px solid var(--b);padding:12px 14px;display:flex;align-items:center;gap:12px">
-            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#8b6914,#c8a951);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🌟</div>
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:700;color:var(--text)">မြကဗ္ဗာ ရွေဆိုင်</div>
-              <div style="font-size:11px;color:var(--subtext);margin-top:2px">Mya Gabar Gold Shop · ပဲခူး</div>
-              <div style="font-size:10px;color:var(--gold2);margin-top:3px;font-weight:600">Est. 1995 · အရည်အသွေး မြင့်မားသော ဆိုင်</div>
-            </div>
-            <div style="text-align:right"><div style="font-size:10px;color:var(--subtext)">MCM Gold</div><div style="font-size:13px;font-weight:700;color:var(--up)">↑ 5,622K</div></div>
-          </div>
-
-          <div style="background:var(--card);border-radius:14px;border:1px solid var(--b);padding:12px 14px;display:flex;align-items:center;gap:12px">
-            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#a07830,#e8c860);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👑</div>
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:700;color:var(--text)">ရွှေမင်းသမီး ရွေဆိုင်</div>
-              <div style="font-size:11px;color:var(--subtext);margin-top:2px">Golden Queen Gold Shop · ရန်ကုန်မြို့</div>
-              <div style="font-size:10px;color:var(--gold2);margin-top:3px;font-weight:600">Est. 2001 · ခေတ်မီ ရွေဆိုင်ကြီး</div>
-            </div>
-            <div style="text-align:right"><div style="font-size:10px;color:var(--subtext)">MCM Gold</div><div style="font-size:13px;font-weight:700;color:var(--up)">↑ 5,619K</div></div>
-          </div>
-
-        </div>
+      <!-- Myanmar Gold Shops -->
+      <div class="sec-hdr" style="margin-top:18px">🏅 Myanmar Gold Shops</div>
+      <div style="overflow-x:auto;padding:0 16px 8px;display:flex;gap:10px;scrollbar-width:none">
+        <div class="gs-card"><div class="gs-name">ကြီးဒုံ ရွှေဆိုင်</div><div class="gs-loc">📍 ရန်ကုန်မြို့</div><div class="gs-price">1 Kyat = <span style="color:var(--up)">250,000 MMK</span></div></div>
+        <div class="gs-card"><div class="gs-name">မင်းသားဗိုလ် ရွှေဆိုင်</div><div class="gs-loc">📍 မန္တလေးမြို့</div><div class="gs-price">1 Kyat = <span style="color:var(--up)">249,500 MMK</span></div></div>
+        <div class="gs-card"><div class="gs-name">ယဉ်မောင် ရွှေဆိုင်</div><div class="gs-loc">📍 ပြည်မြို့</div><div class="gs-price">1 Kyat = <span style="color:var(--up)">249,800 MMK</span></div></div>
+        <div class="gs-card"><div class="gs-name">Capital Gold</div><div class="gs-loc">📍 နေပြည်တော်</div><div class="gs-price">1 Kyat = <span style="color:var(--up)">250,200 MMK</span></div></div>
+        <div class="gs-card"><div class="gs-name">Asia Pacific Gold</div><div class="gs-loc">📍 ရန်ကုန်မြို့</div><div class="gs-price">1 Kyat = <span style="color:var(--up)">249,900 MMK</span></div></div>
       </div>
 
-      <div class="sec-hdr" style="margin-top:18px">📊 Market Discussion</div>
+      <!-- Community Feed -->
+      <div class="sec-hdr">📊 Market Discussion</div>
       <div style="background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.22);border-radius:12px;padding:9px 12px;margin:0 16px 10px;font-size:11px;color:#ff6b78;font-weight:500;line-height:1.5">
         <b>⚠️ Warning:</b> Sharing false market info leads to <b>permanent ban</b>.
+      </div>
+      <div id="communityPostBox" style="display:none;margin:0 16px 10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px">
+        <textarea id="communityInput" placeholder="Share your market analysis..." style="width:100%;background:transparent;border:none;outline:none;color:var(--text);font-size:13px;resize:none;height:60px"></textarea>
+        <div style="display:flex;justify-content:flex-end"><button onclick="postCommunityMsg()" style="background:var(--gold2);color:#000;border:none;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer">Post</button></div>
+      </div>
+      <div id="communityFeed" style="padding:0 16px 12px">
+        <div style="text-align:center;padding:20px;color:var(--subtext);font-size:13px">Loading...</div>
       </div>
     </div>
 
@@ -1096,11 +1064,6 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
           <div class="pm-l"><div class="pm-ico" style="background:rgba(149,128,255,.1)">🔒</div><div><div class="pm-name" data-i18n="changePass">Change Password</div></div></div>
           <div class="pm-arr">›</div>
         </div>
-        <div class="pm-sec"><div class="pm-sec-title">ကျွန်ုပ်တို့အကြောင်း</div></div>
-        <div class="pm-item" onclick="openAboutApp()">
-          <div class="pm-l"><div class="pm-ico" style="background:rgba(201,168,76,.12)">ℹ️</div><div><div class="pm-name">About App</div><div class="pm-sub">COMEX GOLD TRADING</div></div></div>
-          <div class="pm-arr">›</div>
-        </div>
       </div>
       <div class="pm-sec">
         <div class="pm-sec-title" data-i18n="preferences">Preferences</div>
@@ -1117,6 +1080,10 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
         <div class="pm-sec-title" data-i18n="support">Support</div>
         <div class="pm-item" onclick="openChat()">
           <div class="pm-l"><div class="pm-ico" style="background:rgba(52,152,219,.1)">💬</div><div class="pm-name" data-i18n="support">Customer Service</div></div>
+          <div class="pm-arr">›</div>
+        </div>
+        <div class="pm-item" onclick="openAboutApp()">
+          <div class="pm-l"><div class="pm-ico" style="background:rgba(201,168,76,.1)">ℹ️</div><div class="pm-name">About COMEX</div></div>
           <div class="pm-arr">›</div>
         </div>
         <div class="pm-item" onclick="doSignOut()">
@@ -1199,19 +1166,15 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
 
 <!-- Trade Result Modal -->
 <div class="trade-result-modal" id="tradeResultModal" style="display:none">
-  <div class="tr-box" style="min-width:280px;max-width:320px">
+  <div class="tr-box">
     <div class="tr-ico" id="resIco">🏆</div>
     <div class="tr-title" id="resTitle" style="color:var(--up)">TRADE WIN!</div>
-    <div id="resSubTitle" style="font-size:12px;color:var(--subtext);margin-bottom:12px;text-align:center">XAU/USD</div>
-    <div style="height:1px;background:var(--b);margin-bottom:12px"></div>
     <div class="tr-row"><span>Trader</span><span class="tr-val" id="resUser">—</span></div>
-    <div class="tr-row"><span>Direction</span><span class="tr-val" id="resDir">—</span></div>
-    <div class="tr-row"><span>Trade Time</span><span class="tr-val" id="resTime">—</span></div>
-    <div class="tr-row"><span>Trade Amount</span><span class="tr-val" id="resAmount">—</span></div>
-    <div class="tr-row"><span id="resPnlLabel">Trade Profit</span><span class="tr-val" id="resProfit">—</span></div>
-    <div style="height:1px;background:var(--b);margin:10px 0"></div>
-    <div class="tr-row"><span style="font-weight:700">New Balance</span><span class="tr-val" style="color:var(--gold2);font-weight:700;font-size:15px" id="resTotal">—</span></div>
-    <button class="tr-collect" onclick="closeTradeModal()" id="resCollect">💰 Collect</button>
+    <div class="tr-row"><span>Duration</span><span class="tr-val" id="resTime">—</span></div>
+    <div class="tr-row"><span>Amount</span><span class="tr-val" id="resAmount">—</span></div>
+    <div class="tr-row"><span>P&amp;L</span><span class="tr-val" id="resProfit">—</span></div>
+    <div class="tr-row"><span style="font-weight:700">Balance</span><span class="tr-val" style="color:var(--gold2)" id="resTotal">—</span></div>
+    <button class="tr-collect" onclick="closeTradeModal()">Collect</button>
   </div>
 </div>
 
@@ -1299,7 +1262,46 @@ body.light .wh-lbl,.wallet-hero .wh-lbl{color:rgba(255,255,255,0.75);}
   </div>
 </div>
 
-<script>
+<!-- About App Modal -->
+<div class="cr-modal" id="aboutAppModal">
+  <div class="cr-box" style="max-height:85vh;overflow-y:auto;">
+    <div class="cr-title">🏅 COMEX အကြောင်း</div>
+    <div style="font-size:13px;color:var(--text);line-height:1.8;white-space:pre-line;padding:4px 0">
+<b>COMEX — Commodity Exchange Inc.</b>
+🇺🇸 အမေရိကန်ပြည်ထောင်စု၊ နယူးယောက်မြို့အခြေစိုက်
+
+COMEX (Commodity Exchange Inc.) သည် အမေရိကန်ပြည်ထောင်စု (USA)၊ နယူးယောက်မြို (New York City) တွင် အခြေစိုက်သည့် ကမ္ဘာ့အကြီးဆုံး သတ္တုကြိုတင်အရောင်းအဝယ်ပြုလုပ်ရာ ဈေးကွက် (Metals Futures and Options Market) တစ်ခုဖြစ်ပါသည်။
+
+၁၉၃၃ ခုနှစ်တွင် စတင်တည်ထောင်ခဲ့ပြီး ယခုအခါတွင် ကမ္ဘာ့အကြီးဆုံး ငွေကြေးနှင့် ကုန်စည်ဒိုင်ကြီးတစ်ခုဖြစ်သော ချီကာဂိုအခြေစိုက် CME Group ၏ လက်အောက်တွင် အဓိက ဌာနခွဲတစ်ခုအနေဖြင့် ရပ်တည်လည်ပတ်လျက်ရှိပါသည်။
+
+<b>📊 ကမ္ဘာ့ရွှေဈေးကွက်နှင့် COMEX ၏ ပတ်သက်မှု</b>
+
+① ကမ္ဘာ့ရွှေဈေးနှုန်းကို သတ်မှတ်ပေးခြင်း
+ကမ္ဘာတစ်ဝှမ်းရှိ ရွှေဈေးနှုန်းများသည် လန်ဒန်ရွှေဈေးကွက် (LBMA) နှင့် နယူးယောက်ရွှေဈေးကွက် (COMEX Futures Market) တိုအပေါ်တွင် အဓိက မှီခိုနေရပါသည်။
+
+② ကြိုတင်အရောင်းအဝယ်စာချုပ်များ (Futures Contracts)
+COMEX တွင် ရွှေ Futures Contracts များကို အရောင်းအဝယ် လုပ်ကြပြီး အနာဂတ်ကာလ တစ်ခုတွင် ယနေ့သတ်မှတ်ထားသော ဈေးနှုန်းဖြင့် ဝယ်ယူ/ရောင်းချပါမည်ဟု စာချုပ်ချုပ်ဆိုခြင်း ဖြစ်ပါသည်။
+
+③ Hedging — အရှုးအမြတ် ကာကွယ်ခြင်း
+ကမ္ဘာ့ ရွှေတူးဖော်ရေးကုမ္ပဏီများ၊ ဗဟိုဘဏ်များသည် COMEX ဈေးကွက်ကို အသုံးပြု၍ ရွှေဈေး ကျဆင်းမှုကို ကြိုတင်ကာကွယ်ထားလေ့ရှိပါသည်။
+
+④ Paper Gold နှင့် ဈေးကွက်လွှမ်းမိုးမှု
+COMEX တွင် အရောင်းအဝယ်ဖြစ်နေသော ရွှေပမာဏသည် တကယ့်လက်တွေ့ Physical Gold ထက် အဆပေါင်းများစွာ ပိုများသည့် "Paper Gold" ဖြစ်ပါသည်။
+
+<b>📌 အချုပ်</b>
+COMEX သည် ကမ္ဘာ့ရွှေဈေးကွက်တစ်ခုလုံးကို ချက်ချင်း ရိုက်ခတ်မှုရှိသည့် အဓိက အသက်သွေးကြောဖြစ်ပါသည်။
+    </div>
+    <div class="cr-btns"><button class="cr-cancel" onclick="document.getElementById('aboutAppModal').style.display='none'">Close</button></div>
+  </div>
+</div>
+
+<!-- KYC Success Animation -->
+<div id="kycSuccessOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;flex-direction:column;">
+  <div style="font-size:72px;animation:bounceIn .6s cubic-bezier(.36,.07,.19,.97)">🎉</div>
+  <div style="font-size:24px;font-weight:800;color:var(--gold2);margin:16px 0 8px">KYC Approved!</div>
+  <div style="font-size:14px;color:var(--subtext);margin-bottom:24px">You can now Trade, Deposit & Withdraw</div>
+  <button onclick="document.getElementById('kycSuccessOverlay').style.display='none';const tn=document.querySelector('.nav-item[data-tab=\\'trade\\']');if(tn)switchTab(tn);" style="background:var(--gold2);color:#000;border:none;border-radius:12px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer">Start Trading 🚀</button>
+</div>
 // ================================================================
 // FIREBASE CONFIG  (V8 compat SDK)
 // ================================================================
@@ -1314,8 +1316,7 @@ const firebaseConfig = {
   measurementId: "G-5ZERCCNH7E"
 };
 let app, auth, db;
-let storage=null;
-try { app=firebase.initializeApp(firebaseConfig); auth=firebase.auth(); db=firebase.firestore(); storage=firebase.storage(); }
+try { app=firebase.initializeApp(firebaseConfig); auth=firebase.auth(); db=firebase.firestore(); }
 catch(e){ console.warn('Firebase:',e.message); }
 
 // ================================================================
@@ -1691,17 +1692,20 @@ async function doSignOut(){
 // ================================================================
 function startWalletListener(uid){
   if(walletUnsub) walletUnsub();
+  let prevKycVerified = currentUser?.kyc_verified || false;
   walletUnsub=db.collection('users').doc(uid).onSnapshot(snap=>{
     if(!snap.exists) return;
     const d=snap.data();
-    const prevKycVerified = currentUser.kyc_verified;
+    const wasVerified = prevKycVerified;
+    prevKycVerified = d.kyc_verified || false;
+    // Show success animation when KYC gets approved
+    if(!wasVerified && d.kyc_verified){
+      const ov=document.getElementById('kycSuccessOverlay');
+      if(ov){ov.style.display='flex';}
+      document.getElementById('kycModal')?.style && (document.getElementById('kycModal').style.display='none');
+    }
     currentUser={...currentUser,...d};
     updateWalletUI(d.balance||{usd:0,wg:0,mmk:0});
-    // KYC approval detection
-    if(!prevKycVerified && d.kyc_verified===true){
-      const pend=document.getElementById('kycPendingOverlay');if(pend)pend.style.display='none';
-      showKycSuccess();
-    }
     updateRecordUI(d.trade_history||[]);
     updateKycStatus(d);
     // Admin revokes or suspends
@@ -1746,16 +1750,9 @@ function updateRecordUI(hist){
 function updateKycStatus(data){
   const sub=document.getElementById('kycStatusSub'),ico=document.getElementById('kycStatusIcon');
   if(!sub)return;
-  if(data.kyc_verified){
-    sub.textContent=t('verified');sub.style.color='var(--up)';
-    if(ico){ico.textContent='✅';ico.style.color='var(--up)';}
-  } else if(data.kycSubmitted){
-    sub.textContent=t('pendingKYC');sub.style.color='var(--gold2)';
-    if(ico){ico.textContent='⏳';ico.style.color='var(--gold2)';}
-  } else {
-    sub.textContent=t('notVerified');sub.style.color='';
-    if(ico){ico.textContent='›';ico.style.color='';}
-  }
+  if(data.kyc_verified){sub.textContent=t('verified');sub.style.color='var(--up)';if(ico)ico.textContent='✅';}
+  else if(data.kycSubmitted){sub.textContent=t('pendingKYC');sub.style.color='var(--gold2)';}
+  else{sub.textContent=t('notVerified');}
 }
 
 // ================================================================
@@ -1777,7 +1774,6 @@ function selectTimer(el,sec,pct){
 
 function executeTrade(dir){
   if(!currentUser){showToast('Please sign in.');return;}
-  if(!currentUser.kyc_verified){showToast('⚠️ KYC စစ်ဆေးပြီးမှ Trade လုပ်နိုင်သည်');return;}
   if(tradeInProgress){showToast('Trade in progress.');return;}
   if(!currentUser.kyc_verified){showToast('⚠️ Complete KYC to start trading.');document.getElementById('kycModal').style.display='flex';return;}
   const amtEl=document.getElementById('tradeAmount');
@@ -1825,23 +1821,15 @@ async function settleTradeResult(tradeId,tData,amount){
     await db.collection('users').doc(currentUser.uid).update({'balance.usd':newBal,trade_history:firebase.firestore.FieldValue.arrayUnion(entry)});
     await db.collection('activeTrades').doc(tradeId).update({settled:true});
     const m=document.getElementById('tradeResultModal');if(!m)return;
-    const now=new Date();
-    const timeStr=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     document.getElementById('resIco').textContent=win?'🏆':'💔';
-    document.getElementById('resTitle').textContent=win?'🎉 TRADE WIN!':'📉 TRADE LOSS';
+    document.getElementById('resTitle').textContent=win?'TRADE WIN!':'TRADE LOSS';
     document.getElementById('resTitle').style.color=win?'var(--up)':'var(--dn)';
-    const sub=document.getElementById('resSubTitle');if(sub)sub.textContent=(tData.symbol||'XAU/USD')+' · '+timeStr;
     document.getElementById('resUser').textContent=currentUser.realName||'Trader';
-    const dirEl=document.getElementById('resDir');
-    if(dirEl){dirEl.textContent=(tData.dir||'BUY')+' '+(tData.dir==='BUY'?'📈':'📉');dirEl.style.color=tData.dir==='BUY'?'var(--up)':'var(--dn)';}
     document.getElementById('resTime').textContent=selectedSec+'s';
     document.getElementById('resAmount').textContent='$'+amount.toFixed(2);
-    const pnlLbl=document.getElementById('resPnlLabel');if(pnlLbl)pnlLbl.textContent=win?'Trade Profit':'Trade Loss';
     document.getElementById('resProfit').textContent=(win?'+':'-')+'$'+Math.abs(pnl).toFixed(2);
     document.getElementById('resProfit').style.color=win?'var(--up)':'var(--dn)';
     document.getElementById('resTotal').textContent='$'+newBal.toFixed(2);
-    const collectBtn=document.getElementById('resCollect');
-    if(collectBtn)collectBtn.style.background=win?'linear-gradient(135deg,#2ecc71,#27ae60)':'linear-gradient(135deg,#e74c3c,#c0392b)';
     m.style.display='flex';
   }catch(e){showToast('Error: '+e.message);}
   tradeInProgress=false;
@@ -1904,34 +1892,47 @@ async function submitWithdraw(){
 // ================================================================
 let kycPhotoData={front:'',back:''},selKycType='nrc';
 function openKYCModal(){
-  if(currentUser&&currentUser.kyc_verified){showToast('✅ KYC Already Verified!');return;}
-  if(currentUser&&currentUser.kycSubmitted){
-    const pend=document.getElementById('kycPendingOverlay');if(pend)pend.style.display='flex';return;
+  const m=document.getElementById('kycModal');
+  if(!m) return;
+  // Reset form visibility first
+  const actionBtns=document.getElementById('kycActionBtns');
+  const pendNote=document.getElementById('kycPendNote');
+  const err=document.getElementById('kycErr');
+  if(err) err.textContent='';
+  if(currentUser?.kyc_verified){
+    // Already verified
+    if(actionBtns) actionBtns.style.display='none';
+    if(pendNote){
+      pendNote.innerHTML='✅ KYC Verified — Deposits & Trading Unlocked!';
+      pendNote.style.display='block';
+      pendNote.style.background='rgba(39,201,110,.1)';
+      pendNote.style.borderColor='rgba(39,201,110,.25)';
+      pendNote.style.color='var(--up)';
+    }
+  } else if(currentUser?.kycSubmitted){
+    // Submitted, waiting admin approval
+    if(actionBtns) actionBtns.style.display='none';
+    if(pendNote){
+      pendNote.innerHTML='✅ KYC Submitted — Admin reviewing your documents';
+      pendNote.style.display='block';
+    }
+  } else {
+    // Fresh — show form
+    if(actionBtns) actionBtns.style.display='flex';
+    if(pendNote) pendNote.style.display='none';
   }
-  const m=document.getElementById('kycModal');if(m)m.style.display='flex';
+  m.style.display='flex';
 }
 function selectKycType(tp,el){selKycType=tp;document.querySelectorAll('.kyc-type-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
 function previewKycPhoto(input,num){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=e=>{
-    // Compress: resize to max 800px, JPEG 0.72 quality (~150-250KB max)
-    const img=new Image();
-    img.onload=()=>{
-      const MAX=800,Q=0.72;
-      let w=img.width,h=img.height;
-      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
-      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
-      cv.getContext('2d').drawImage(img,0,0,w,h);
-      const compressed=cv.toDataURL('image/jpeg',Q);
-      const prev=document.getElementById('kycP'+num+'Prev');const box=prev?.parentElement;
-      if(prev){prev.src=compressed;prev.style.display='block';}
-      if(box){const ico=box.querySelector('.phico');const lbl=box.querySelector('.phlbl');if(ico)ico.style.display='none';if(lbl)lbl.style.display='none';}
-      if(num===1)kycPhotoData.front=compressed;else kycPhotoData.back=compressed;
-    };
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(file);
+    const prev=document.getElementById('kycP'+num+'Prev');const box=prev?.parentElement;
+    if(prev){prev.src=e.target.result;prev.style.display='block';}
+    if(box){const ico=box.querySelector('.phico');const lbl=box.querySelector('.phlbl');if(ico)ico.style.display='none';if(lbl)lbl.style.display='none';}
+    if(num===1)kycPhotoData.front=e.target.result;else kycPhotoData.back=e.target.result;
+  };reader.readAsDataURL(file);
 }
 async function submitKYC(){
   if(!currentUser)return;
@@ -1944,18 +1945,11 @@ async function submitKYC(){
   if(!kycPhotoData.front||!kycPhotoData.back){err.textContent='⚠️ Upload both document photos.';return;}
   err.textContent='Submitting...';
   try{
-    // Use set+merge so it works even if user doc is missing fields
-    await db.collection('users').doc(currentUser.uid).set({kycSubmitted:true,kyc_verified:false,kycStatus:'pending',kyc:{realName:name,birthday:bod,phone:ph,idNumber:idno,docType:selKycType,submittedAt:new Date().toISOString()}},{merge:true});
+    await db.collection('users').doc(currentUser.uid).update({kycSubmitted:true,kyc_verified:false,kyc:{realName:name,birthday:bod,phone:ph,idNumber:idno,docType:selKycType,submittedAt:new Date().toISOString()}});
     await db.collection('kycPhotos').doc(currentUser.uid).set({userId:currentUser.uid,photoFront:kycPhotoData.front,photoBack:kycPhotoData.back,docType:selKycType,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
     document.getElementById('kycActionBtns').style.display='none';
     document.getElementById('kycPendNote').style.display='block';
     err.textContent='';
-    currentUser.kycSubmitted=true;
-    // Close KYC modal and show pending overlay
-    setTimeout(()=>{
-      const m=document.getElementById('kycModal');if(m)m.style.display='none';
-      const pend=document.getElementById('kycPendingOverlay');if(pend)pend.style.display='flex';
-    },600);
     showToast('✅ KYC Submitted! Admin will review shortly.');
   }catch(e){err.textContent='❌ '+e.message;}
 }
@@ -2071,6 +2065,7 @@ async function sendMsg(){
 // ================================================================
 // LANGUAGE MODAL
 // ================================================================
+function openAboutApp(){const m=document.getElementById('aboutAppModal');if(m)m.style.display='flex';}
 function openLang(){const o=document.getElementById('langOverlay');if(o)o.style.display='flex';}
 function closeLang(){const o=document.getElementById('langOverlay');if(o)o.style.display='none';}
 function closeLangOut(e){if(e.target===document.getElementById('langOverlay'))closeLang();}
@@ -2123,27 +2118,8 @@ let livePrice=3298.50;
 setInterval(()=>{livePrice+=((Math.random()-.48)*.4);const fmt=livePrice.toFixed(2);const hp=document.getElementById('hdrPrice');if(hp)hp.textContent='$'+fmt;const hro=document.getElementById('heroPrice');if(hro)hro.textContent='$'+fmt;},2000);
 
 function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function showKycSuccess(){
-  const overlay=document.getElementById('kycSuccessOverlay');
-  if(!overlay)return;
-  overlay.style.display='flex';
-  // Spawn star particles
-  const stars=document.getElementById('kycSuccessStars');
-  if(stars){
-    stars.innerHTML='';
-    const emojis=['⭐','🌟','✨','💫','🎉','🎊','🏆','👑'];
-    for(let i=0;i<20;i++){
-      const s=document.createElement('div');
-      s.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${80+Math.random()*20}%;font-size:${16+Math.random()*16}px;animation:starFloat ${2+Math.random()*3}s ${Math.random()*2}s forwards`;
-      s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-      stars.appendChild(s);
-    }
-  }
-  updateKycStatus(currentUser);
-}
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(6,6,5,.95);color:#fafaf5;padding:10px 22px;border-radius:12px;font-size:13px;z-index:99999;border:1px solid rgba(201,168,76,.4);backdrop-filter:blur(10px);max-width:90vw;text-align:center;font-family:"DM Sans",sans-serif';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 function showAbout(){showToast("COMEX GOLD TRADING — Myanmar's Premier Digital Gold Platform");}
-function openAboutApp(){const o=document.getElementById("aboutOverlay");if(o)o.style.display="flex";}
 
 // ================================================================
 // INIT
@@ -2156,8 +2132,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   applyAutoTheme();applyLanguage('en');
   setInterval(applyAutoTheme,60000);
   const wa=document.querySelectorAll('.wa-btn');
-  if(wa[0])wa[0].onclick=()=>{if(!currentUser?.kyc_verified){showToast('⚠️ KYC စစ်ဆေးပြီးမှ Deposit လုပ်နိုင်သည်');return;}openDepositModal();};
-  if(wa[1])wa[1].onclick=()=>{if(!currentUser?.kyc_verified){showToast('⚠️ KYC စစ်ဆေးပြီးမှ Withdraw လုပ်နိုင်သည်');return;}openWithdrawModal();};
+  if(wa[0])wa[0].onclick=openDepositModal;
+  if(wa[1])wa[1].onclick=openWithdrawModal;
   // Fallback: if Firebase takes too long, hide splash and show landing after 5s
   setTimeout(()=>{
     const splash=document.getElementById('appSplash');
@@ -2167,98 +2143,5 @@ window.addEventListener('DOMContentLoaded',()=>{
   }, 5000);
 });
 </script>
-<!-- KYC PENDING OVERLAY (after submission) -->
-<div id="kycPendingOverlay" style="display:none;position:fixed;inset:0;z-index:8800;background:linear-gradient(160deg,#0c0412,#1a0820,#0c0412);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
-  <div style="font-size:52px;margin-bottom:16px;animation:pendSpin 3s ease-in-out infinite">⏳</div>
-  <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold);margin-bottom:8px">KYC စစ်ဆေးဆဲ</div>
-  <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:20px;max-width:300px">
-    Admin Team မှ KYC အချက်အလက်ကို စစ်ဆေးနေဆဲဖြစ်ပါသဖြင့် ခဏစောင့်ပေးပါ။<br>
-    <span style="color:var(--gold);font-size:11px">ပုံမှန်အားဖြင့် ၁-၂၄ နာရီ ကြာနိုင်သည်။</span>
-  </div>
-  <div style="display:flex;gap:7px;justify-content:center;margin-bottom:20px">
-    <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);animation:dotP 1.5s ease-in-out infinite"></div>
-    <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);animation:dotP 1.5s ease-in-out .3s infinite"></div>
-    <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);animation:dotP 1.5s ease-in-out .6s infinite"></div>
-  </div>
-  <button onclick="document.getElementById('kycPendingOverlay').style.display='none'" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--text2);border-radius:12px;padding:10px 24px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px">ပိတ်မည် (Close)</button>
-</div>
-
-<!-- KYC SUCCESS ANIMATION OVERLAY -->
-<div id="kycSuccessOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:linear-gradient(160deg,#0c1a0c,#082008,#0c1a0c);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
-  <div id="kycSuccessStars" style="position:absolute;inset:0;pointer-events:none;overflow:hidden"></div>
-  <div style="position:relative;z-index:1">
-    <div style="font-size:72px;margin-bottom:16px;animation:successBounce 0.6s cubic-bezier(.36,.07,.19,.97) 0.3s both">✅</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#2ecc71;margin-bottom:8px">KYC အတည်ပြုပြီး!</div>
-    <div style="font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:24px">
-      ဂုဏ်ယူပါသည်! KYC အောင်မြင်ပါသည်။<br>
-      <span style="color:#2ecc71;font-weight:600">Deposit / Trade / Withdraw</span> လုပ်ဆောင်နိုင်ပါပြီ။
-    </div>
-    <button onclick="document.getElementById('kycSuccessOverlay').style.display='none'" style="background:linear-gradient(135deg,#2ecc71,#27ae60);border:none;color:#000;border-radius:14px;padding:13px 36px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(46,204,113,.4)">
-      🚀 Trade စတင်မည်!
-    </button>
-  </div>
-</div>
-
-<style>
-@keyframes successBounce{0%{transform:scale(0);opacity:0}60%{transform:scale(1.3)}80%{transform:scale(.9)}100%{transform:scale(1);opacity:1}}
-@keyframes starFloat{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(-100vh) rotate(720deg);opacity:0}}
-</style>
-
-<!-- ABOUT APP OVERLAY -->
-<div id="aboutOverlay" style="display:none;position:fixed;inset:0;z-index:8000;background:var(--bg);flex-direction:column;overflow-y:auto;">
-  <div style="padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--b);position:sticky;top:0;background:var(--bg);z-index:1">
-    <button onclick="document.getElementById('aboutOverlay').style.display='none'" style="background:rgba(255,255,255,.06);border:1px solid var(--b);color:var(--text);border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif">←</button>
-    <div style="font-size:16px;font-weight:700;color:var(--text)">About App</div>
-  </div>
-  <div style="padding:20px 16px">
-    <!-- Logo -->
-    <div style="text-align:center;padding:24px 0 20px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--gold);letter-spacing:.1em">COMEX GOLD</div>
-      <div style="font-size:11px;color:var(--subtext);letter-spacing:.2em;text-transform:uppercase;margin-top:4px">TRADING PLATFORM</div>
-      <div style="margin-top:10px;display:inline-block;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 16px;font-size:12px;color:var(--gold)">Version 1.0.0</div>
-    </div>
-
-    <!-- About text -->
-    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid var(--b);margin-bottom:14px">
-      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px">🌟 COMEX GOLD TRADING အကြောင်း</div>
-      <div style="font-size:13px;color:var(--textA);line-height:1.8">
-        COMEX GOLD TRADING သည် မြန်မာနိုင်ငံ၏ ဦးဆောင်သော ဒစ်ဂျစ်တယ် ရွေကုန်သွယ်ရေး ပလပ်ဖောင်းတစ်ခုဖြစ်ပါသည်။ ကမ္ဘာ့ ရွေပြိုင်ကွက် (XAU/USD) ကို အချိန်နှင့်တပြေးညီ ကုန်သွယ်နိုင်ရန် ထူးချွန်သောနည်းပညာဖြင့် ဖန်တီးထားပါသည်။
-      </div>
-    </div>
-
-    <!-- Features -->
-    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid var(--b);margin-bottom:14px">
-      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px">⚡ ဝန်ဆောင်မှုများ</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">📈</span><div><div style="font-size:12px;font-weight:600;color:var(--text)">Live Trading</div><div style="font-size:11px;color:var(--subtext)">XAU/USD အချိန်နှင့်တပြေးညီ ကုန်သွယ်</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">💰</span><div><div style="font-size:12px;font-weight:600;color:var(--text)">Wallet Management</div><div style="font-size:11px;color:var(--subtext)">ငွေသွင်း/ငွေထုတ် လွယ်ကူစွာ</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🔐</span><div><div style="font-size:12px;font-weight:600;color:var(--text)">KYC Security</div><div style="font-size:11px;color:var(--subtext)">ကိုယ်ရေးအချက်အလက် ကာကွယ်မှု</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">📊</span><div><div style="font-size:12px;font-weight:600;color:var(--text)">Trade History</div><div style="font-size:11px;color:var(--subtext)">ကုန်သွယ်မှတ်တမ်း အပြည့်အစုံ</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">💬</span><div><div style="font-size:12px;font-weight:600;color:var(--text)">24/7 Support</div><div style="font-size:11px;color:var(--subtext)">Customer Service အချိန်မဆိုင်</div></div></div>
-      </div>
-    </div>
-
-    <!-- Contact -->
-    <div style="background:var(--card);border-radius:16px;padding:18px;border:1px solid var(--b);margin-bottom:14px">
-      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px">📞 ဆက်သွယ်ရန်</div>
-      <div style="font-size:12px;color:var(--textA);line-height:2">
-        🌐 Website: comex-gold.com<br>
-        📧 Email: support@comex-gold.com<br>
-        📱 Telegram: @COMEXGOLD<br>
-        🕐 Support: 24 နာရီ / ၇ ရက်
-      </div>
-    </div>
-
-    <!-- Legal -->
-    <div style="text-align:center;padding:12px 0 20px">
-      <div style="font-size:11px;color:var(--subtext);line-height:1.8">
-        © 2026 COMEX GOLD TRADING<br>
-        All rights reserved.<br>
-        <span style="color:var(--gold)">ISO 4217 · XAU · LBMA Compliant</span>
-      </div>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
